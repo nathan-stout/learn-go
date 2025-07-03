@@ -21,7 +21,11 @@ func NewAlbumHandler(albumService *services.AlbumService) *AlbumHandler {
 
 // GetAlbums responds with the list of all albums as JSON.
 func (h *AlbumHandler) GetAlbums(c *gin.Context) {
-	albums := h.albumService.GetAllAlbums()
+	albums, err := h.albumService.GetAllAlbums()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "failed to retrieve albums"})
+		return
+	}
 	c.IndentedJSON(http.StatusOK, albums)
 }
 
@@ -87,6 +91,10 @@ func (h *AlbumHandler) RemoveAlbum(c *gin.Context) {
 	}
 
 	// Return the updated list of albums
-	albums := h.albumService.GetAllAlbums()
+	albums, err := h.albumService.GetAllAlbums()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message": "failed to retrieve albums"})
+		return
+	}
 	c.IndentedJSON(http.StatusOK, albums)
 }

@@ -2,8 +2,6 @@ package services
 
 import (
 	"errors"
-	"slices"
-	"strconv"
 )
 
 // Album represents data about a record album.
@@ -30,34 +28,35 @@ var (
 	ErrDuplicateAlbum = errors.New("album with this title and artist already exists")
 )
 
-// albums slice to seed record album data.
-var albums = []Album{
-	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
-	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
-	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
+// AlbumRepository interface defines the methods that our repository must implement
+type AlbumRepository interface {
+	GetAll() ([]Album, error)
+	GetByID(id string) (*Album, error)
+	Create(req AlbumRequest) (*Album, error)
+	Delete(id string) error
+	ExistsByTitleAndArtist(title, artist string) (bool, error)
 }
 
 // AlbumService handles album business logic
-type AlbumService struct{}
+type AlbumService struct {
+	repo AlbumRepository
+}
 
 // NewAlbumService creates a new album service
-func NewAlbumService() *AlbumService {
-	return &AlbumService{}
+func NewAlbumService(repo AlbumRepository) *AlbumService {
+	return &AlbumService{
+		repo: repo,
+	}
 }
 
 // GetAllAlbums returns all albums
-func (s *AlbumService) GetAllAlbums() []Album {
-	return albums
+func (s *AlbumService) GetAllAlbums() ([]Album, error) {
+	return s.repo.GetAll()
 }
 
 // GetAlbumByID finds an album by ID
 func (s *AlbumService) GetAlbumByID(id string) (*Album, error) {
-	for _, album := range albums {
-		if album.ID == id {
-			return &album, nil
-		}
-	}
-	return nil, ErrAlbumNotFound
+	return s.repo.GetByID(id)
 }
 
 // CreateAlbum creates a new album with business validation
@@ -68,36 +67,21 @@ func (s *AlbumService) CreateAlbum(req AlbumRequest) (*Album, error) {
 	}
 
 	// Business rule: no duplicate albums
-	if s.isDuplicateAlbum(req.Title, req.Artist) {
+	exists, err := s.repo.ExistsByTitleAndArtist(req.Title, req.Artist)
+	if err != nil {
+		return nil, err
+	}
+	if exists {
 		return nil, ErrDuplicateAlbum
 	}
 
-	// Generate ID (business logic for ID generation)
-	newID := s.generateNextID()
-
-	// Create album
-	newAlbum := Album{
-		ID:     newID,
-		Title:  req.Title,
-		Artist: req.Artist,
-		Price:  req.Price,
-	}
-
-	// Add to collection
-	albums = append(albums, newAlbum)
-
-	return &newAlbum, nil
+	// Create album through repository
+	return s.repo.Create(req)
 }
 
 // DeleteAlbum removes an album by ID
 func (s *AlbumService) DeleteAlbum(id string) error {
-	for i, album := range albums {
-		if album.ID == id {
-			albums = slices.Delete(albums, i, i+1)
-			return nil
-		}
-	}
-	return ErrAlbumNotFound
+	return s.repo.Delete(id)
 }
 
 // validateAlbumRequest validates business rules for album creation
@@ -115,19 +99,4 @@ func (s *AlbumService) validateAlbumRequest(req AlbumRequest) error {
 	}
 
 	return nil
-}
-
-// isDuplicateAlbum checks if an album with the same title and artist exists
-func (s *AlbumService) isDuplicateAlbum(title, artist string) bool {
-	for _, album := range albums {
-		if album.Title == title && album.Artist == artist {
-			return true
-		}
-	}
-	return false
-}
-
-// generateNextID generates the next available ID
-func (s *AlbumService) generateNextID() string {
-	return strconv.Itoa(len(albums) + 1)
 }

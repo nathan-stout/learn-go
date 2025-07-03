@@ -1,0 +1,180 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# Go workspace file
+go.work
+
+# Environment files (NEVER commit these)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+build-errors.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Temporary folders
+tmp/
+temp/
+.tmp/
+
+# Docker
+.dockerignore
+
+# Air (hot reload) temporary files
+tmp/
+
+# Database files (if using SQLite for testing)
+*.db
+*.sqlite
+*.sqlite3
+
+# Compiled static files
+static/
+public/build/
+
+# Package files
+*.tar.gz
+*.zip
+
+# Backup files
+*.bak
+*.backup
+
+# Local configuration files
+config.local.*
+*.local
+
+# Certificate files (never commit these)
+*.pem
+*.key
+*.crt
+*.cert
+
+# SSH keys
+id_rsa
+id_rsa.pub
+*.ppk
+
+# Application specific
+albums-api
+albums-api.exe
+
+# Docker volumes data (if accidentally created locally)
+postgres_data/
+data/
+
+# Test output
+test-results/
+coverage.html
+coverage.xml
+
+# Profiling data
+*.prof
+
+# Memory dumps
+*.hprof
+
+# Go module cache (usually not needed in git)
+# Uncomment if you want to exclude module cache
+# go.sum
+
+# Local development scripts that might contain secrets
+local-*.sh
+dev-local.*
+
+# Kubernetes secrets (if you add k8s later)
+secrets.yaml
+*-secret.yaml
+
+# Terraform state files (if you add infrastructure as code)
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Cloud deployment files with secrets
+cloudbuild.yaml.local
+deployment.local.yaml
+
+# Editor backup files
+*~
+*.orig
+*.rej
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#* 
